@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="2">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="37" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="2">
  <tileset firstgid="1" name="world_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="../sprites/world_tileset.png" width="256" height="256"/>
   <tile id="0">
@@ -12,24 +12,123 @@
     <object id="4" x="0" y="0" width="16" height="16"/>
    </objectgroup>
   </tile>
+  <tile id="2">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="5">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+    <object id="2" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="6">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="7">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="8">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="9">
+   <objectgroup draworder="index" id="3">
+    <object id="2" x="0" y="0">
+     <polygon points="0,0 6,0 10,1 14,1 16,3 16,8 0,8"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="10">
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="4">
+     <polygon points="0,0 2,-2 14,-2 16,0 16,5 0,5"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="11">
+   <objectgroup draworder="index" id="3">
+    <object id="3" x="0" y="3">
+     <polygon points="0,0 2,-2 6,-2 10,-3 16,-3 16,5 0,5"/>
+    </object>
+   </objectgroup>
+  </tile>
   <tile id="16">
    <objectgroup draworder="index" id="2">
     <object id="1" x="0" y="0" width="16" height="16"/>
+    <object id="2" x="0" y="0" width="16" height="16"/>
    </objectgroup>
   </tile>
   <tile id="17">
    <objectgroup draworder="index" id="2">
     <object id="1" x="0" y="0" width="16" height="16"/>
+    <object id="2" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="18">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="19">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="20">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="21">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="22">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="23">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="24">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="34">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0" width="16" height="16"/>
    </objectgroup>
   </tile>
  </tileset>
- <layer id="1" name="Ground" width="30" height="20">
+ <layer id="1" name="Ground" width="37" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRgA8wEoFpAQTRsBAan4lG9o4C+gBi0hUp6Y5YPcjpiIkBM51hE0PHyICQXvR0SyzG5k5c9hJyA6XuQgZMBMyAiQEA6T8Frg==
+   eJztkzsOAiEQhmd9rPHRoOsSa09gY29jb+MB7DyGjV5bJsvE2Qmw6xqCBV/yhzAQ+EIYgEwmgxxSCzg4pRZgFDZ9nY4RXRB0UTYXz3ohaufITugysiPdvzBZQduXvO4m18hO0k+J+ZrVpyz/wpalNHmm1WlBXjV0v9veZNzjTNe/HepF8bGxeXnWb/D5z8qzB3kMcAs5TZibhN6HnGYs2GtLaPqNaoScf+vEI1Es2E/aZG5HjhY1OZdO5Y9OvLc1uO+TtV2HU+idKuZTBfZl3LwBf8YKdA==
   </data>
  </layer>
  <objectgroup id="3" name="Spawns">
-  <object id="1" name="PlayerSpawn" x="192" y="230">
+  <object id="1" name="PlayerSpawn" x="72" y="188">
    <properties>
     <property name="type" value="player"/>
    </properties>
