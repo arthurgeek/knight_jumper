@@ -39,16 +39,25 @@ impl Player {
             sprite.texture_atlas = Some(TextureAtlas { layout, index: 0 });
         }
 
-        // Spawn child collider
+        // Spawn child collider with zero friction to prevent wall-climbing
         world.commands().entity(entity).with_children(|children| {
-            // Collider (circle at feet)
-            children.spawn((Collider::circle(5.0), Transform::from_xyz(0.0, -7.0, 0.0)));
+            children.spawn((
+                Collider::capsule(3.0, 5.0),
+                Transform::from_xyz(0.0, -7.0, 0.0),
+                Friction::ZERO,
+            ));
         });
     }
 }
 
 #[derive(Component, Default)]
 pub struct Grounded;
+
+#[derive(Component, Default)]
+pub struct WallContactLeft;
+
+#[derive(Component, Default)]
+pub struct WallContactRight;
 
 #[derive(Component, Reflect, Default)]
 #[reflect(Component)]

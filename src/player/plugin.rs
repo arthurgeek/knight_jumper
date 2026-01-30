@@ -3,7 +3,7 @@ use super::messages::PlayerMovement;
 use super::resources::{KnightAtlas, PlayerInput};
 use super::systems::{
     apply_player_movement, detect_player_input, load_knight_atlas, update_grounded,
-    update_player_animation,
+    update_player_animation, update_wall_contact,
 };
 use bevy::prelude::*;
 
@@ -41,7 +41,10 @@ impl Plugin for PlayerPlugin {
             .add_systems(
                 FixedUpdate,
                 (
-                    (update_grounded, apply_player_movement)
+                    (
+                        (update_grounded, update_wall_contact),
+                        apply_player_movement,
+                    )
                         .chain()
                         .in_set(PlayerSystemSet::Movement),
                     update_player_animation.in_set(PlayerSystemSet::Animation),
