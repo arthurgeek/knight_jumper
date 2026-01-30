@@ -14,6 +14,9 @@ use std::time::Duration;
     AnimationState,
     AnimationConfig = AnimationConfig::new(0, 3, 10, true),
     RigidBody::Dynamic,
+    LockedAxes = LockedAxes::ROTATION_LOCKED,
+    Speed = Speed(130.0),
+    JumpVelocity = JumpVelocity(300.0),
   )]
 #[component(on_add = Self::on_add)]
 pub struct Player;
@@ -38,10 +41,22 @@ impl Player {
 
         // Spawn child collider
         world.commands().entity(entity).with_children(|children| {
+            // Collider (circle at feet)
             children.spawn((Collider::circle(5.0), Transform::from_xyz(0.0, -7.0, 0.0)));
         });
     }
 }
+
+#[derive(Component, Default)]
+pub struct Grounded;
+
+#[derive(Component, Reflect, Default)]
+#[reflect(Component)]
+pub struct Speed(pub f32);
+
+#[derive(Component, Reflect, Default)]
+#[reflect(Component)]
+pub struct JumpVelocity(pub f32);
 
 #[derive(Component, Reflect, Default)]
 #[reflect(Component)]
