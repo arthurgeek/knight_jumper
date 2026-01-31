@@ -16,7 +16,9 @@ pub fn spawn_player_at_spawn_point(
 ) {
     for (name, transform) in &spawn_points {
         if name.0.as_str() == "PlayerSpawn" {
-            commands.spawn((Player, *transform));
+            let mut player_transform = *transform;
+            player_transform.translation.z = 10.0;
+            commands.spawn((Player, player_transform));
         }
     }
 }
