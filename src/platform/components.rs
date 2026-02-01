@@ -33,55 +33,44 @@ impl OneWayPlatform {
     }
 }
 
-/// Tiled object configuration for spawning a moving platform.
-/// Place in Tiled with type="MovingPlatformSpawn" and properties:
-/// - "end_point": object reference to the destination point
-/// - "duration": float for travel time (default 1.5)
-#[derive(Component, Debug, Clone, Default, Reflect)]
+/// Tiled polyline for a moving platform.
+/// First point = left edge at start, last point = right edge at end.
+#[derive(Component, Debug, Clone, Reflect)]
 #[reflect(Component, Default)]
-pub struct MovingPlatformSpawn {
-    /// Entity reference to the end point (auto-populated by bevy_ecs_tiled)
-    pub end_point: Option<Entity>,
-    /// Duration of one-way travel in seconds
-    #[reflect(default = "MovingPlatformSpawn::default_duration")]
-    pub duration: f32,
-}
-
-impl MovingPlatformSpawn {
-    fn default_duration() -> f32 {
-        1.5
-    }
-}
-
-/// A platform that moves back and forth between two points
-#[derive(Component, Reflect)]
-#[reflect(Component)]
 #[require(
     Sprite,
     RigidBody::Kinematic,
     Collider::rectangle(32.0, 9.0),
+    LinearVelocity,
     ActiveCollisionHooks::MODIFY_CONTACTS
 )]
 #[component(on_add = Self::on_add)]
 pub struct MovingPlatform {
+    /// Speed in pixels per second
+    pub speed: f32,
+    /// Start position (center) - computed from polyline
+    #[reflect(ignore)]
     pub start: Vec2,
+    /// End position (center) - computed from polyline
+    #[reflect(ignore)]
     pub end: Vec2,
-    pub duration: f32,
-    pub progress: f32,
-    pub direction: f32, // 1.0 = forward, -1.0 = backward
+    /// 1.0 = toward end, -1.0 = toward start
+    #[reflect(ignore)]
+    pub direction: f32,
 }
 
-impl MovingPlatform {
-    pub fn new(start: Vec2, end: Vec2, duration: f32) -> Self {
+impl Default for MovingPlatform {
+    fn default() -> Self {
         Self {
-            start,
-            end,
-            duration,
-            progress: 0.0,
+            speed: 50.0,
+            start: Vec2::ZERO,
+            end: Vec2::ZERO,
             direction: 1.0,
         }
     }
+}
 
+impl MovingPlatform {
     fn on_add(mut world: DeferredWorld, ctx: HookContext) {
         let entity = ctx.entity;
 

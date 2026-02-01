@@ -12,7 +12,9 @@ pub fn setup_coin_sensors(
 ) {
     for evt in collider_events.read() {
         if coins.get(*evt.event.collider_of).is_ok() {
-            commands.entity(evt.origin).insert((Sensor, CollisionEventsEnabled));
+            commands
+                .entity(evt.origin)
+                .insert((Sensor, CollisionEventsEnabled));
         }
     }
 }
@@ -28,8 +30,14 @@ pub fn collect_coins(
     for evt in collision_events.read() {
         // Check both colliders - coin could be either one depending on collision direction
         let (coin_entity, player_body) = match (
-            collider_query.get(evt.collider1).ok().filter(|c| coins.contains(c.0)),
-            collider_query.get(evt.collider2).ok().filter(|c| coins.contains(c.0)),
+            collider_query
+                .get(evt.collider1)
+                .ok()
+                .filter(|c| coins.contains(c.0)),
+            collider_query
+                .get(evt.collider2)
+                .ok()
+                .filter(|c| coins.contains(c.0)),
         ) {
             (Some(coin), None) => (Some(coin.0), evt.body2),
             (None, Some(coin)) => (Some(coin.0), evt.body1),
@@ -39,11 +47,11 @@ pub fn collect_coins(
         // Check if the other body is a player
         let is_player = player_body.is_some_and(|body| players.contains(body));
 
-        if let Some(coin) = coin_entity {
-            if is_player {
-                info!("Coin collected!");
-                commands.entity(coin).despawn();
-            }
+        if let Some(coin) = coin_entity
+            && is_player
+        {
+            info!("Coin collected!");
+            commands.entity(coin).despawn();
         }
     }
 }

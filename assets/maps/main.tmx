@@ -198,16 +198,15 @@
    <point/>
   </object>
   <object id="2" name="PlatformSpawn" x="65" y="165" width="32" height="9"/>
-  <object id="4" name="MovingPlatformSpawn" type="knight_jumper::platform::components::MovingPlatformSpawn" x="400" y="192" width="32" height="9">
+  <object id="4" name="MovingPlatform1" x="400" y="192">
    <properties>
-    <property name="end_point" type="class" propertytype="knight_jumper::platform::components::MovingPlatformSpawn">
+    <property name="MovingPlatform" type="class" propertytype="knight_jumper::platform::components::MovingPlatform">
      <properties>
-      <property name="duration" type="float" value="1.5"/>
-      <property name="end_point" type="object" value="5"/>
+      <property name="speed" type="float" value="50"/>
      </properties>
     </property>
    </properties>
+   <polyline points="0,0 96,0"/>
   </object>
-  <object id="5" name="PlatformEnd1" x="464" y="192" width="32" height="9"/>
  </objectgroup>
 </map>

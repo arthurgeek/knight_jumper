@@ -1,4 +1,4 @@
-use super::components::{MovingPlatform, MovingPlatformSpawn, OneWayPlatform};
+use super::components::{MovingPlatform, OneWayPlatform};
 use super::resources::PlatformTexture;
 use avian2d::prelude::*;
 use bevy::prelude::*;
@@ -29,81 +29,75 @@ pub fn spawn_platform_at_spawn_point(
     }
 }
 
-/// Spawns MovingPlatform entities from MovingPlatformSpawn Tiled objects.
-/// The end_point property is an object reference that bevy_ecs_tiled resolves to Entity.
-pub fn spawn_moving_platforms(
-    mut commands: Commands,
-    spawn_configs: Query<(Instance<MovingPlatformSpawn>, &MovingPlatformSpawn, &Transform), Added<MovingPlatformSpawn>>,
-    transforms: Query<&Transform>,
+/// Initializes MovingPlatform start/end from polyline vertices.
+pub fn setup_moving_platforms(
+    maps_assets: Res<Assets<TiledMapAsset>>,
+    map_query: Query<&TiledMap>,
+    mut platforms: Query<
+        (
+            &mut MovingPlatform,
+            &Sprite,
+            &TiledObject,
+            &TiledMapReference,
+            &GlobalTransform,
+            &mut Transform,
+        ),
+        Added<MovingPlatform>,
+    >,
 ) {
-    for (spawn_instance, config, transform) in &spawn_configs {
-        // Tiled position is top-left, offset to center for Bevy (32x9 platform)
-        let mut centered = *transform;
-        centered.translation.x += 16.0; // half width
-        centered.translation.y -= 4.5; // half height
-
-        let start = centered.translation.truncate();
-
-        // Get end position from the referenced entity
-        let end_entity = config
-            .end_point
-            .expect("MovingPlatformSpawn missing end_point property");
-        let end_transform = transforms
-            .get(end_entity)
-            .expect("MovingPlatform end_point entity has no Transform");
-        let end = Vec2::new(
-            end_transform.translation.x + 16.0,
-            end_transform.translation.y - 4.5,
-        );
-
-        let duration = if config.duration > 0.0 {
-            config.duration
-        } else {
-            1.5
+    for (mut platform, sprite, tiled_obj, map_ref, global_transform, mut transform) in
+        &mut platforms
+    {
+        let Some(vertices) = map_query
+            .get(map_ref.0)
+            .ok()
+            .and_then(|map_handle| maps_assets.get(&map_handle.0))
+            .map(|map_asset| map_asset.object_vertices(tiled_obj, global_transform))
+        else {
+            continue;
         };
 
-        commands.spawn((
-            Name::new("MovingPlatform"),
-            MovingPlatform::new(start, end, duration),
-            centered,
-        ));
+        assert!(
+            vertices.len() >= 2,
+            "MovingPlatform polyline needs at least 2 points"
+        );
 
-        // Despawn the spawn marker and end_point marker (no longer needed)
-        commands.entity(*spawn_instance).despawn();
-        if let Some(end_entity) = config.end_point {
-            commands.entity(end_entity).despawn();
-        }
+        // Get sprite dimensions from rect
+        let (width, height) = sprite
+            .rect
+            .map(|r| (r.width(), r.height()))
+            .unwrap_or((32.0, 9.0));
+
+        // First vertex = left edge at start, last = right edge at end
+        let first = vertices.first().unwrap();
+        let last = vertices.last().unwrap();
+
+        platform.start = Vec2::new(first.x + width / 2.0, first.y - height / 2.0);
+        platform.end = Vec2::new(last.x - width / 2.0, last.y - height / 2.0);
+
+        // Set initial position
+        transform.translation = platform.start.extend(transform.translation.z);
     }
 }
 
 /// Animates moving platforms back and forth using LinearVelocity
 pub fn update_moving_platforms(
-    time: Res<Time>,
-    mut platforms: Query<(&mut MovingPlatform, &mut LinearVelocity)>,
+    mut platforms: Query<(&mut MovingPlatform, &Transform, &mut LinearVelocity)>,
 ) {
-    for (mut platform, mut velocity) in &mut platforms {
-        // Update progress
-        platform.progress += platform.direction * time.delta_secs() / platform.duration;
+    for (mut platform, transform, mut velocity) in &mut platforms {
+        let pos = transform.translation.truncate();
+        let target = if platform.direction > 0.0 {
+            platform.end
+        } else {
+            platform.start
+        };
+        let to_target = target - pos;
 
-        // Reverse direction at ends
-        if platform.progress >= 1.0 {
-            platform.progress = 1.0;
-            platform.direction = -1.0;
-        } else if platform.progress <= 0.0 {
-            platform.progress = 0.0;
-            platform.direction = 1.0;
+        if to_target.length() < 1.0 {
+            platform.direction *= -1.0;
+            velocity.0 = Vec2::ZERO;
+        } else {
+            velocity.0 = to_target.normalize() * platform.speed;
         }
-
-        // Calculate velocity to reach target position
-        let target = platform.start.lerp(platform.end, platform.progress);
-        let next_progress =
-            platform.progress + platform.direction * time.delta_secs() / platform.duration;
-        let next_target = platform
-            .start
-            .lerp(platform.end, next_progress.clamp(0.0, 1.0));
-
-        // Set velocity based on where we need to go
-        let delta = next_target - target;
-        velocity.0 = delta / time.delta_secs();
     }
 }
