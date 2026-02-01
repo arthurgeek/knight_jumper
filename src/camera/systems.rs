@@ -85,8 +85,14 @@ pub fn follow_player(
 
     // Clamp target so camera edges stay within bounds
     let mut target = player_transform.translation.truncate();
-    target.x = target.x.clamp(follow.limit_left + half_width, follow.limit_right - half_width);
-    target.y = target.y.clamp(follow.limit_bottom + half_height, follow.limit_top - half_height);
+    target.x = target.x.clamp(
+        follow.limit_left + half_width,
+        follow.limit_right - half_width,
+    );
+    target.y = target.y.clamp(
+        follow.limit_bottom + half_height,
+        follow.limit_top - half_height,
+    );
 
     // Snap to player on first frame, then smooth follow
     if !initialized {

@@ -29,8 +29,8 @@ pub fn detect_killzone_collision(
     collider_query: Query<&TiledColliderOf>,
 ) {
     for evt in collision_events.read() {
-        // Check if either collider belongs to a kill zone
-        let killzone_hit = collider_query
+        // Check if either collider belongs to a kill zone (via TiledColliderOf parent)
+        let killzone_via_parent = collider_query
             .get(evt.collider1)
             .ok()
             .filter(|c| killzones.contains(c.0))
@@ -41,7 +41,11 @@ pub fn detect_killzone_collision(
                     .filter(|c| killzones.contains(c.0))
             });
 
-        if killzone_hit.is_none() {
+        // Also check if collider entity itself has KillZone (for manually spawned enemies)
+        let killzone_direct =
+            killzones.contains(evt.collider1) || killzones.contains(evt.collider2);
+
+        if killzone_via_parent.is_none() && !killzone_direct {
             continue;
         }
 

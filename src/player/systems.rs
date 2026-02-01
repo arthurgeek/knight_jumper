@@ -1,9 +1,10 @@
 use super::components::{
-    AnimationConfig, CoyoteTimer, Grounded, JumpBuffer, JumpVelocity, PlatformVelocity, Player,
-    Speed, WallContactLeft, WallContactRight,
+    CoyoteTimer, Grounded, JumpBuffer, JumpVelocity, PlatformVelocity, Player, WallContactLeft,
+    WallContactRight,
 };
 use super::messages::PlayerMovement;
 use super::resources::{KnightAtlas, PlayerInput};
+use crate::core::components::Speed;
 use crate::killzone::components::DeathTimer;
 use avian2d::prelude::*;
 use bevy::prelude::*;
@@ -278,10 +279,9 @@ pub fn apply_player_movement(
         // Add platform velocity if standing on a moving platform
         velocity.x = player_vel + platform_vel.map(|p| p.0.x).unwrap_or(0.0);
 
-        // Send movement event for animation system
+        // Send movement event for sprite flipping
         movement_events.write(PlayerMovement {
             is_moving: input.movement_direction != 0.0,
-            is_grounded,
             facing_left: input.movement_direction < 0.0,
         });
     }
@@ -295,45 +295,16 @@ fn move_toward(current: f32, target: f32, max_delta: f32) -> f32 {
     }
 }
 
-/// System that updates player animations based on movement events
-///
-/// Runs in Animation set after movement. Handles all animation state
-/// separately from physics and input.
-pub fn update_player_animation(
-    time: Res<Time>,
-    mut player: Query<(&mut AnimationConfig, &mut Sprite), With<Player>>,
+/// Flips player sprite based on movement direction.
+/// Only updates when moving, so sprite stays in last direction when stopped.
+pub fn flip_player_sprite(
+    mut player: Query<&mut Sprite, With<Player>>,
     mut movement_events: MessageReader<PlayerMovement>,
 ) {
     for event in movement_events.read() {
-        for (mut config, mut sprite) in &mut player {
-            // Flip sprite
-            sprite.flip_x = event.facing_left;
-
-            // Change animation based on state
-            if !event.is_grounded {
-                // *config = AnimationConfig::new(jump_frames...);
-            } else if event.is_moving {
-                // *config = AnimationConfig::new(run_frames...);
-            } else {
-                // *config = AnimationConfig::new(idle_frames...);
-                // We track how long the current sprite has been displayed for
-                config.frame_timer.tick(time.delta());
-
-                // If it has been displayed for the user-defined amount of time (fps)...
-                if config.frame_timer.just_finished()
-                    && let Some(atlas) = &mut sprite.texture_atlas
-                {
-                    if atlas.index == config.last_sprite_index {
-                        // ...and it IS the last frame, then we move back to the first frame and stop.
-                        atlas.index = config.first_sprite_index;
-                    } else {
-                        // ...and it is NOT the last frame, then we move to the next frame...
-                        atlas.index += 1;
-                        // ...and reset the frame timer to start counting all over again
-                        config.frame_timer =
-                            AnimationConfig::timer_from_fps(config.fps, config.looping);
-                    }
-                }
+        if event.is_moving {
+            for mut sprite in &mut player {
+                sprite.flip_x = event.facing_left;
             }
         }
     }

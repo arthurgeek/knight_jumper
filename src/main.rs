@@ -1,4 +1,6 @@
 mod camera;
+mod core;
+mod enemy;
 mod killzone;
 mod physics;
 mod pickups;
@@ -9,6 +11,8 @@ mod tiled;
 
 use bevy::{prelude::*, window::WindowResolution};
 use camera::CameraPlugin;
+use core::CorePlugin;
+use enemy::EnemyPlugin;
 use killzone::KillZonePlugin;
 use physics::PhysicsPlugin;
 use pickups::PickupsPlugin;
@@ -34,11 +38,13 @@ fn main() -> AppExit {
             .set(ImagePlugin::default_nearest()),
         TiledPlugin,
         PhysicsPlugin,
+        CorePlugin,
         PlayerPlugin,
         CameraPlugin,
         PlatformPlugin,
         PickupsPlugin,
         KillZonePlugin,
+        EnemyPlugin,
     ))
     .init_state::<GameState>()
     .add_systems(OnEnter(GameState::Reloading), restart_game);

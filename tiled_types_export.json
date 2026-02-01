@@ -13154,19 +13154,25 @@
     ]
   },
   {
-    "id": 443,
-    "name": "knight_jumper::killzone::components::KillZone",
+    "id": 442,
+    "name": "knight_jumper::core::components::Speed",
     "type": "class",
     "useAs": [
       "property"
     ],
     "color": "#000000",
     "drawFill": true,
-    "members": []
+    "members": [
+      {
+        "name": "0",
+        "type": "float",
+        "value": null
+      }
+    ]
   },
   {
     "id": 444,
-    "name": "knight_jumper::pickups::components::Coin",
+    "name": "knight_jumper::enemy::components::Enemy",
     "type": "class",
     "useAs": [
       "property"
@@ -13177,6 +13183,39 @@
   },
   {
     "id": 445,
+    "name": "knight_jumper::enemy::components::Slime",
+    "type": "class",
+    "useAs": [
+      "property"
+    ],
+    "color": "#000000",
+    "drawFill": true,
+    "members": []
+  },
+  {
+    "id": 447,
+    "name": "knight_jumper::killzone::components::KillZone",
+    "type": "class",
+    "useAs": [
+      "property"
+    ],
+    "color": "#000000",
+    "drawFill": true,
+    "members": []
+  },
+  {
+    "id": 448,
+    "name": "knight_jumper::pickups::components::Coin",
+    "type": "class",
+    "useAs": [
+      "property"
+    ],
+    "color": "#000000",
+    "drawFill": true,
+    "members": []
+  },
+  {
+    "id": 449,
     "name": "knight_jumper::platform::components::MovingPlatform",
     "type": "class",
     "useAs": [
@@ -13193,7 +13232,7 @@
     ]
   },
   {
-    "id": 446,
+    "id": 450,
     "name": "knight_jumper::platform::components::OneWayPlatform",
     "type": "class",
     "useAs": [
@@ -13204,7 +13243,7 @@
     "members": []
   },
   {
-    "id": 447,
+    "id": 451,
     "name": "knight_jumper::platform::resources::PlatformTexture",
     "type": "class",
     "useAs": [
@@ -13221,35 +13260,7 @@
     ]
   },
   {
-    "id": 450,
-    "name": "knight_jumper::player::components::AnimationState",
-    "type": "class",
-    "useAs": [
-      "property"
-    ],
-    "color": "#000000",
-    "drawFill": true,
-    "members": [
-      {
-        "name": ":variant",
-        "propertyType": "knight_jumper::player::components::AnimationState:::Variant",
-        "type": "class",
-        "value": "Idle"
-      }
-    ]
-  },
-  {
-    "id": 449,
-    "name": "knight_jumper::player::components::AnimationState:::Variant",
-    "type": "enum",
-    "storageType": "string",
-    "values": [
-      "Idle"
-    ],
-    "valuesAsFlags": false
-  },
-  {
-    "id": 453,
+    "id": 454,
     "name": "knight_jumper::player::components::JumpVelocity",
     "type": "class",
     "useAs": [
@@ -13266,7 +13277,7 @@
     ]
   },
   {
-    "id": 454,
+    "id": 455,
     "name": "knight_jumper::player::components::Player",
     "type": "class",
     "useAs": [
@@ -13275,23 +13286,6 @@
     "color": "#000000",
     "drawFill": true,
     "members": []
-  },
-  {
-    "id": 455,
-    "name": "knight_jumper::player::components::Speed",
-    "type": "class",
-    "useAs": [
-      "property"
-    ],
-    "color": "#000000",
-    "drawFill": true,
-    "members": [
-      {
-        "name": "0",
-        "type": "float",
-        "value": null
-      }
-    ]
   },
   {
     "id": 456,

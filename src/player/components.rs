@@ -1,11 +1,11 @@
 use super::resources::KnightAtlas;
+use crate::core::components::{Speed, SpriteAnimation};
 use avian2d::prelude::*;
 use bevy::{
     ecs::{lifecycle::HookContext, world::DeferredWorld},
     prelude::*,
     sprite::Anchor,
 };
-use std::time::Duration;
 
 #[derive(Component, Reflect, Default)]
 #[reflect(Component)]
@@ -13,8 +13,7 @@ use std::time::Duration;
     Name = "Player",
     Sprite,
     Anchor = Anchor::from(Vec2::new(0.0, -0.175)),
-    AnimationState,
-    AnimationConfig = AnimationConfig::new(0, 3, 10, true),
+    SpriteAnimation = SpriteAnimation::new(0, 3, 10),  // Idle animation
     RigidBody::Dynamic,
     Collider = Collider::capsule(3.0, 5.0),
     ShapeCaster = ShapeCaster::new(Collider::capsule(2.97, 4.95), Vec2::ZERO, 0.0, Dir2::NEG_Y).with_max_distance(2.0).with_max_hits(10),
@@ -83,48 +82,4 @@ pub struct WallContactRight;
 
 #[derive(Component, Reflect, Default)]
 #[reflect(Component)]
-pub struct Speed(pub f32);
-
-#[derive(Component, Reflect, Default)]
-#[reflect(Component)]
 pub struct JumpVelocity(pub f32);
-
-#[derive(Component, Reflect, Default)]
-#[reflect(Component)]
-pub enum AnimationState {
-    #[default]
-    Idle,
-}
-
-#[derive(Component, Reflect, Default)]
-#[reflect(Component)]
-pub struct AnimationConfig {
-    pub first_sprite_index: usize,
-    pub last_sprite_index: usize,
-    pub fps: u8,
-    pub looping: bool,
-    pub frame_timer: Timer,
-}
-
-impl AnimationConfig {
-    pub fn new(first: usize, last: usize, fps: u8, looping: bool) -> Self {
-        Self {
-            first_sprite_index: first,
-            last_sprite_index: last,
-            fps,
-            looping,
-            frame_timer: Self::timer_from_fps(fps, looping),
-        }
-    }
-
-    pub fn timer_from_fps(fps: u8, looping: bool) -> Timer {
-        Timer::new(
-            Duration::from_secs_f32(1.0 / fps as f32),
-            if looping {
-                TimerMode::Repeating
-            } else {
-                TimerMode::Once
-            },
-        )
-    }
-}

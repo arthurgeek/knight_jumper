@@ -1,5 +1,6 @@
 use super::components::{MovingPlatform, OneWayPlatform};
 use super::resources::PlatformTexture;
+use crate::state::GameState;
 use avian2d::prelude::*;
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::*;
@@ -21,7 +22,12 @@ pub fn spawn_platform_at_spawn_point(
             centered.translation.x += 16.0; // half width
             centered.translation.y -= 4.5; // half height
 
-            commands.spawn((Name::new("OneWayPlatform"), OneWayPlatform, centered));
+            commands.spawn((
+                Name::new("OneWayPlatform"),
+                OneWayPlatform,
+                centered,
+                DespawnOnExit(GameState::Playing),
+            ));
 
             // Despawn the spawn marker
             commands.entity(*tiled_object).despawn();
