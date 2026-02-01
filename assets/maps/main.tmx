@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="37" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="14">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="56" height="20" tilewidth="16" tileheight="16" infinite="1" nextlayerid="8" nextobjectid="20">
  <tileset firstgid="1" name="world_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="../sprites/world_tileset.png" width="256" height="256"/>
   <tile id="0">
@@ -116,6 +116,27 @@
     <object id="1" x="0" y="0" width="16" height="16"/>
    </objectgroup>
   </tile>
+  <tile id="25">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 6,0 10,1 14,1 16,3 16,8 0,8"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="26">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="4">
+     <polygon points="0,0 2,-2 14,-2 16,0 16,5 0,5"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="27">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="3">
+     <polygon points="0,0 2,-2 6,-2 10,-3 14,-3 16,-3 16,5 0,5"/>
+    </object>
+   </objectgroup>
+  </tile>
   <tile id="34">
    <objectgroup draworder="index" id="2">
     <object id="1" x="0" y="0" width="16" height="16"/>
@@ -146,9 +167,87 @@
    </animation>
   </tile>
  </tileset>
- <layer id="1" name="Ground" width="37" height="20">
+ <layer id="7" name="Background" width="56" height="20">
   <data encoding="base64" compression="zlib">
-   eJztkzsOAiEQhmd9rPHRoOsSa09gY29jb+MB7DyGjV5bJsvE2Qmw6xqCBV/yhzAQ+EIYgEwmgxxSCzg4pRZgFDZ9nY4RXRB0UTYXz3ohaufITugysiPdvzBZQduXvO4m18hO0k+J+ZrVpyz/wpalNHmm1WlBXjV0v9veZNzjTNe/HepF8bGxeXnWb/D5z8qzB3kMcAs5TZibhN6HnGYs2GtLaPqNaoScf+vEI1Es2E/aZG5HjhY1OZdO5Y9OvLc1uO+TtV2HU+idKuZTBfZl3LwBf8YKdA==
+   <chunk x="-16" y="-16" width="16" height="16">
+   eJxjYBgFo2BgwUQK8Kh+yvQDAEG6Mvs=
+  </chunk>
+   <chunk x="0" y="-16" width="16" height="16">
+   eJxjYBgFo2DgwMRRPKAYADsnNmE=
+  </chunk>
+   <chunk x="16" y="-16" width="16" height="16">
+   eJxjYBgFo2DgwMRRPKAYADsnNmE=
+  </chunk>
+   <chunk x="32" y="-16" width="16" height="16">
+   eJxjYBgFo2DgwMRRPKAYADsnNmE=
+  </chunk>
+   <chunk x="48" y="-16" width="16" height="16">
+   eJxjYBgFo2DgwMRRPKAYADsnNmE=
+  </chunk>
+   <chunk x="64" y="-16" width="16" height="16">
+   eJxjYBgFo2DgwEQceFQ/ffQDABCXFGU=
+  </chunk>
+   <chunk x="-16" y="0" width="16" height="16">
+   eJxjYGBgmEgBZhgE+hdSgEFgIwV4VD8Dw0EKMAhcpACP6qdMPwCaoquR
+  </chunk>
+   <chunk x="0" y="0" width="16" height="16">
+   eJybyMDAMHEI44UU4o2jmCJ8kEJ8cRQPKAYARfu3AQ==
+  </chunk>
+   <chunk x="16" y="0" width="16" height="16">
+   eJybyMDAMHEI44UU4o2jmCJ8kEJ8cRQPKAYARfu3AQ==
+  </chunk>
+   <chunk x="32" y="0" width="16" height="16">
+   eJybyMDAMHEI44UU4o2jmCJ8kEJ8cRQPKAYARfu3AQ==
+  </chunk>
+   <chunk x="48" y="0" width="16" height="16">
+   eJybyMDAMHEI44UU4o2jmCJ8kEJ8cRQPKAYARfu3AQ==
+  </chunk>
+   <chunk x="64" y="0" width="16" height="16">
+   eJybyMDAMBELJhZg00tP/QtxYGLBRhx4VD9x4CAOTCy4iAOP6qePfgBZi0Sh
+  </chunk>
+   <chunk x="-16" y="16" width="16" height="16">
+   eJxjYGBgeEgBBoGPFODBoH8UjIKRCgAfXjeN
+  </chunk>
+   <chunk x="0" y="16" width="16" height="16">
+   eJx7yMDA8JAC/HGI41EwCkYyAACGoTtB
+  </chunk>
+   <chunk x="16" y="16" width="16" height="16">
+   eJx7yMDA8JAC/HGI41EwCkYyAACGoTtB
+  </chunk>
+   <chunk x="32" y="16" width="16" height="16">
+   eJx7yMDA8JAC/HGI41EwCkYyAACGoTtB
+  </chunk>
+   <chunk x="48" y="16" width="16" height="16">
+   eJx7yMDA8JAC/HGI41EwCkYyAACGoTtB
+  </chunk>
+   <chunk x="64" y="16" width="16" height="16">
+   eJx7yMDA8BALJhZ8xIGHiv5RMApGMgAAkXEWOQ==
+  </chunk>
+  </data>
+ </layer>
+ <layer id="1" name="Ground" width="56" height="20">
+  <data encoding="base64" compression="zlib">
+   <chunk x="0" y="0" width="16" height="16">
+   eJxjYBgF9ACGFOp3JFMfIxSTox+kTxCKA3HI4wMgfUxQGuYOLiDmQTKbWABzBzJfiAT99AIwf5IKkhgQYYUvXBoJ2AvTz46EQWHOzQAJd5gYDAAAygEDLw==
+  </chunk>
+   <chunk x="16" y="0" width="16" height="16">
+   eJxjYBgFwwmYkaieEY3vRqJ+QSQzMoE4jAz9IMyKhMkBokiYDYjbKDRHjAL3iKJhcgEx+tmhmFz9ADEMA0s=
+  </chunk>
+   <chunk x="32" y="0" width="16" height="16">
+   eJxjYBjcoBWNb0aCXlY0DAJuJOgXRcNiQBxGgn5sZrESUkgAsFHBDGKBMxC7ALErDnlmAnqCgTgEiEOxqHMCYmEs4sh6koE4BYhTsahTxqEfBFpwsJGBCJJ+RiiGgRIcbHR1MCAIxch2OqHZz4RFHbJ+ZHlkjC4uhMd+fPqQMTIAAAzODHE=
+  </chunk>
+   <chunk x="48" y="0" width="16" height="16">
+   eJxjYBgFtADmFOp3p1B/OJHqmIFYCoilkbAMVJyZCP0sOMSFoZgQwKdGhEL9o4AwAACraQHK
+  </chunk>
+   <chunk x="0" y="16" width="16" height="16">
+   eJxjYIAAQSQsBMTiQMwJpZGBOBYxmH4hJDPEcajFpX8UjIJRQH8AADczAWM=
+  </chunk>
+   <chunk x="16" y="16" width="16" height="16">
+   eJwTZ2BgEGfADkSBmA2HHAxIEtAvSkD/KBgFo2DgAABw7gCk
+  </chunk>
+   <chunk x="32" y="16" width="16" height="16">
+   eJxjYGBgECQRowMhJDkhPPqYcOgfBaNgFAwMAADZmwGM
+  </chunk>
   </data>
  </layer>
  <objectgroup id="6" name="Pickups">
@@ -182,12 +281,27 @@
     <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
    </properties>
   </object>
-  <object id="12" gid="257" x="496" y="192" width="16" height="16">
+  <object id="12" gid="257" x="544" y="192" width="16" height="16">
    <properties>
     <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
    </properties>
   </object>
-  <object id="13" gid="257" x="544" y="224" width="16" height="16">
+  <object id="14" gid="257" x="800" y="128" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="15" gid="257" x="816" y="128" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="16" gid="257" x="832" y="128" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="17" gid="257" x="624" y="48" width="16" height="16">
    <properties>
     <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
    </properties>
@@ -206,9 +320,9 @@
      </properties>
     </property>
    </properties>
-   <polyline points="0,0 96,0"/>
+   <polyline points="0,0 128,0"/>
   </object>
-  <object id="14" name="KillZone" x="-50" y="340" width="700" height="50">
+  <object id="19" name="KillZone" x="-373" y="340" width="1619" height="50">
    <properties>
     <property name="KillZone" type="class" propertytype="knight_jumper::killzone::components::KillZone"/>
    </properties>
