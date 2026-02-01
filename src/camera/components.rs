@@ -1,17 +1,23 @@
 use bevy::prelude::*;
 
-#[derive(Component)]
+#[derive(Component, Reflect)]
+#[reflect(Component)]
 pub struct FollowCamera {
     pub smoothing_speed: f32,
-    /// Camera won't go below this Y value (smoothed, set from map at runtime)
     pub limit_bottom: f32,
+    pub limit_top: f32,
+    pub limit_left: f32,
+    pub limit_right: f32,
 }
 
 impl Default for FollowCamera {
     fn default() -> Self {
         Self {
             smoothing_speed: 5.0,
-            limit_bottom: -120.0,
+            limit_bottom: -152.0,
+            limit_top: 200.0,
+            limit_left: -700.0,
+            limit_right: 600.0,
         }
     }
 }
