@@ -25,41 +25,26 @@ pub fn load_knight_atlas(
     commands.insert_resource(KnightAtlas { texture, layout });
 }
 
-/// System that checks if the player is grounded using a short raycast.
-/// More reliable than collision contacts when pressed against walls.
+/// System that checks if the player is grounded using ShapeCaster hits.
 pub fn update_grounded(
     mut commands: Commands,
-    player: Query<(Instance<Player>, &GlobalTransform, &Children)>,
-    collider_query: Query<Entity, With<Collider>>,
-    spatial_query: SpatialQuery,
+    mut query: Query<(Instance<Player>, &ShapeHits, &Rotation)>,
+    sensors: Query<(), With<Sensor>>,
 ) {
-    for (player_instance, transform, children) in &player {
-        // Find the player's collider child to exclude from raycast
-        let Some(collider_entity) = children.iter().find(|c| collider_query.contains(*c)) else {
-            continue;
-        };
-
-        // Cast a ray downward from player center, check for ground within capsule reach
-        // Capsule bottom is at local y = -7 (child offset) - 5 (half_height) - 3 (radius) = -15
-        let player_pos = transform.translation().truncate();
-        let ray_origin = player_pos; // Start from player center
-        let ray_dir = Dir2::NEG_Y;
-        let max_distance = 17.0; // Capsule bottom (-15) + small margin
-
-        let hit = spatial_query.cast_ray(
-            ray_origin,
-            ray_dir,
-            max_distance,
-            true,
-            &SpatialQueryFilter::default().with_excluded_entities([collider_entity]),
-        );
-
-        let is_grounded = hit.map(|h| h.distance < 16.0).unwrap_or(false);
+    for (player, hits, rotation) in &mut query {
+        // Grounded if shape caster has a hit with a roughly upward normal (ignoring sensors)
+        let is_grounded = hits.iter().any(|hit| {
+            // Skip sensors (like coins)
+            if sensors.contains(hit.entity) {
+                return false;
+            }
+            (rotation * -hit.normal2).angle_to(Vec2::Y).abs() <= std::f32::consts::FRAC_PI_4
+        });
 
         if is_grounded {
-            commands.entity(*player_instance).insert(Grounded);
+            commands.entity(*player).insert(Grounded);
         } else {
-            commands.entity(*player_instance).remove::<Grounded>();
+            commands.entity(*player).remove::<Grounded>();
         }
     }
 }
@@ -67,22 +52,29 @@ pub fn update_grounded(
 /// System that checks if the player is touching a wall by examining collision contacts.
 pub fn update_wall_contact(
     mut commands: Commands,
-    player: Query<(Instance<Player>, &Children)>,
-    collider_query: Query<(), With<Collider>>,
+    player: Query<Instance<Player>>,
     collisions: Collisions,
+    sensors: Query<(), With<Sensor>>,
 ) {
-    for (player_instance, children) in &player {
-        let Some(collider_entity) = children.iter().find(|c| collider_query.contains(*c)) else {
-            continue;
-        };
-
+    for player_instance in &player {
+        let player_entity = *player_instance;
         let mut wall_left = false;
         let mut wall_right = false;
 
-        for contacts in collisions.collisions_with(collider_entity) {
+        for contacts in collisions.collisions_with(player_entity) {
+            // Skip sensors (like coins)
+            let other = if contacts.collider1 == player_entity {
+                contacts.collider2
+            } else {
+                contacts.collider1
+            };
+            if sensors.contains(other) {
+                continue;
+            }
+
             if let Some(manifold) = contacts.manifolds.first() {
                 // Normal points from collider1 → collider2, flip if we're collider1
-                let normal = if contacts.collider1 == collider_entity {
+                let normal = if contacts.collider1 == player_entity {
                     -manifold.normal
                 } else {
                     manifold.normal
@@ -91,28 +83,24 @@ pub fn update_wall_contact(
                 // Horizontal normal indicates a wall
                 if normal.x.abs() > 0.7 {
                     if normal.x > 0.0 {
-                        wall_left = true; // Wall to the left pushes us right
+                        wall_left = true;
                     } else {
-                        wall_right = true; // Wall to the right pushes us left
+                        wall_right = true;
                     }
                 }
             }
         }
 
         if wall_left {
-            commands.entity(*player_instance).insert(WallContactLeft);
+            commands.entity(player_entity).insert(WallContactLeft);
         } else {
-            commands
-                .entity(*player_instance)
-                .remove::<WallContactLeft>();
+            commands.entity(player_entity).remove::<WallContactLeft>();
         }
 
         if wall_right {
-            commands.entity(*player_instance).insert(WallContactRight);
+            commands.entity(player_entity).insert(WallContactRight);
         } else {
-            commands
-                .entity(*player_instance)
-                .remove::<WallContactRight>();
+            commands.entity(player_entity).remove::<WallContactRight>();
         }
     }
 }

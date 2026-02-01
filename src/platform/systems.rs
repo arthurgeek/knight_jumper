@@ -3,6 +3,7 @@ use super::resources::PlatformTexture;
 use avian2d::prelude::*;
 use bevy::prelude::*;
 use bevy_ecs_tiled::prelude::*;
+use moonshine_kind::Instance;
 
 pub fn load_platform_texture(mut commands: Commands, asset_server: Res<AssetServer>) {
     let texture = asset_server.load("sprites/platforms.png");
@@ -11,9 +12,9 @@ pub fn load_platform_texture(mut commands: Commands, asset_server: Res<AssetServ
 
 pub fn spawn_platform_at_spawn_point(
     mut commands: Commands,
-    platforms: Query<(Entity, &TiledName, &Transform), Added<TiledObject>>,
+    platforms: Query<(Instance<TiledObject>, &TiledName, &Transform), Added<TiledObject>>,
 ) {
-    for (entity, name, transform) in &platforms {
+    for (tiled_object, name, transform) in &platforms {
         if name.0 == "PlatformSpawn" {
             // Tiled position is top-left, offset to center for Bevy (32x9 platform)
             let mut centered = *transform;
@@ -23,7 +24,7 @@ pub fn spawn_platform_at_spawn_point(
             commands.spawn((Name::new("OneWayPlatform"), OneWayPlatform, centered));
 
             // Despawn the spawn marker
-            commands.entity(entity).despawn();
+            commands.entity(*tiled_object).despawn();
         }
     }
 }
@@ -32,10 +33,10 @@ pub fn spawn_platform_at_spawn_point(
 /// The end_point property is an object reference that bevy_ecs_tiled resolves to Entity.
 pub fn spawn_moving_platforms(
     mut commands: Commands,
-    spawn_configs: Query<(Entity, &MovingPlatformSpawn, &Transform), Added<MovingPlatformSpawn>>,
+    spawn_configs: Query<(Instance<MovingPlatformSpawn>, &MovingPlatformSpawn, &Transform), Added<MovingPlatformSpawn>>,
     transforms: Query<&Transform>,
 ) {
-    for (spawn_entity, config, transform) in &spawn_configs {
+    for (spawn_instance, config, transform) in &spawn_configs {
         // Tiled position is top-left, offset to center for Bevy (32x9 platform)
         let mut centered = *transform;
         centered.translation.x += 16.0; // half width
@@ -68,7 +69,7 @@ pub fn spawn_moving_platforms(
         ));
 
         // Despawn the spawn marker and end_point marker (no longer needed)
-        commands.entity(spawn_entity).despawn();
+        commands.entity(*spawn_instance).despawn();
         if let Some(end_entity) = config.end_point {
             commands.entity(end_entity).despawn();
         }

@@ -3,6 +3,7 @@ use avian2d::prelude::*;
 use bevy::{
     ecs::{lifecycle::HookContext, world::DeferredWorld},
     prelude::*,
+    sprite::Anchor,
 };
 use std::time::Duration;
 
@@ -11,9 +12,13 @@ use std::time::Duration;
 #[require(
     Name = "Player",
     Sprite,
+    Anchor = Anchor::from(Vec2::new(0.0, -0.175)),
     AnimationState,
     AnimationConfig = AnimationConfig::new(0, 3, 10, true),
     RigidBody::Dynamic,
+    Collider = Collider::capsule(3.0, 5.0),
+    ShapeCaster = ShapeCaster::new(Collider::capsule(2.97, 4.95), Vec2::ZERO, 0.0, Dir2::NEG_Y).with_max_distance(2.0).with_max_hits(10),
+    Friction::ZERO,
     LockedAxes = LockedAxes::ROTATION_LOCKED,
     Speed = Speed(130.0),
     JumpVelocity = JumpVelocity(300.0),
@@ -38,15 +43,6 @@ impl Player {
             sprite.image = texture;
             sprite.texture_atlas = Some(TextureAtlas { layout, index: 0 });
         }
-
-        // Spawn child collider with zero friction to prevent wall-climbing
-        world.commands().entity(entity).with_children(|children| {
-            children.spawn((
-                Collider::capsule(3.0, 5.0),
-                Transform::from_xyz(0.0, -7.0, 0.0),
-                Friction::ZERO,
-            ));
-        });
     }
 }
 

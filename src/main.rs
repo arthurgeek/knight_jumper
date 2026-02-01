@@ -1,15 +1,17 @@
-use bevy::{prelude::*, window::WindowResolution};
-use camera::CameraPlugin;
-use physics::PhysicsPlugin;
-use platform::PlatformPlugin;
-use player::PlayerPlugin;
-use tiled::TiledPlugin;
-
 mod camera;
 mod physics;
+mod pickups;
 mod platform;
 mod player;
 mod tiled;
+
+use bevy::{prelude::*, window::WindowResolution};
+use camera::CameraPlugin;
+use physics::PhysicsPlugin;
+use pickups::PickupsPlugin;
+use platform::PlatformPlugin;
+use player::PlayerPlugin;
+use tiled::TiledPlugin;
 
 fn main() -> AppExit {
     let mut app = App::new();
@@ -31,6 +33,7 @@ fn main() -> AppExit {
         PlayerPlugin,
         CameraPlugin,
         PlatformPlugin,
+        PickupsPlugin,
     ));
 
     #[cfg(feature = "debug")]

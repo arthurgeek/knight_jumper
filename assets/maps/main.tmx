@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="37" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="6">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="37" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="14">
  <tileset firstgid="1" name="world_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="../sprites/world_tileset.png" width="256" height="256"/>
   <tile id="0">
@@ -122,11 +122,77 @@
    </objectgroup>
   </tile>
  </tileset>
+ <tileset firstgid="257" name="coin" tilewidth="16" tileheight="16" tilecount="12" columns="12">
+  <image source="../sprites/coin.png" width="192" height="16"/>
+  <tile id="0">
+   <objectgroup draworder="index" id="3">
+    <object id="3" x="3" y="3" width="10" height="10">
+     <ellipse/>
+    </object>
+   </objectgroup>
+   <animation>
+    <frame tileid="0" duration="100"/>
+    <frame tileid="1" duration="100"/>
+    <frame tileid="2" duration="100"/>
+    <frame tileid="3" duration="100"/>
+    <frame tileid="4" duration="100"/>
+    <frame tileid="5" duration="100"/>
+    <frame tileid="6" duration="100"/>
+    <frame tileid="7" duration="100"/>
+    <frame tileid="8" duration="100"/>
+    <frame tileid="9" duration="100"/>
+    <frame tileid="10" duration="100"/>
+    <frame tileid="11" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
  <layer id="1" name="Ground" width="37" height="20">
   <data encoding="base64" compression="zlib">
    eJztkzsOAiEQhmd9rPHRoOsSa09gY29jb+MB7DyGjV5bJsvE2Qmw6xqCBV/yhzAQ+EIYgEwmgxxSCzg4pRZgFDZ9nY4RXRB0UTYXz3ohaufITugysiPdvzBZQduXvO4m18hO0k+J+ZrVpyz/wpalNHmm1WlBXjV0v9veZNzjTNe/HepF8bGxeXnWb/D5z8qzB3kMcAs5TZibhN6HnGYs2GtLaPqNaoScf+vEI1Es2E/aZG5HjhY1OZdO5Y9OvLc1uO+TtV2HU+idKuZTBfZl3LwBf8YKdA==
   </data>
  </layer>
+ <objectgroup id="6" name="Pickups">
+  <object id="6" gid="257" x="112" y="240" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="7" gid="257" x="256" y="240" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="8" gid="257" x="272" y="240" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="9" gid="257" x="144" y="112" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="10" gid="257" x="272" y="144" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="11" gid="257" x="368" y="192" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="12" gid="257" x="496" y="192" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+  <object id="13" gid="257" x="544" y="224" width="16" height="16">
+   <properties>
+    <property name="Coin" type="class" propertytype="knight_jumper::pickups::components::Coin"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="3" name="Spawns">
   <object id="1" name="PlayerSpawn" x="73" y="192">
    <point/>
