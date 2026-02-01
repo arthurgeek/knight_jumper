@@ -27,6 +27,7 @@ pub fn detect_killzone_collision(
     killzones: Query<(), With<KillZone>>,
     players: Query<Entity, (With<Player>, Without<DeathTimer>)>,
     collider_query: Query<&TiledColliderOf>,
+    mut time: ResMut<Time<Virtual>>,
 ) {
     for evt in collision_events.read() {
         // Check if either collider belongs to a kill zone (via TiledColliderOf parent)
@@ -57,9 +58,11 @@ pub fn detect_killzone_collision(
 
         if let Some(player) = player_entity {
             info!("Player hit kill zone! Starting death timer...");
+            time.set_relative_speed(0.5);
             commands
                 .entity(player)
-                .insert((DeathTimer::default(), LinearVelocity::ZERO));
+                .remove::<Collider>()
+                .insert(DeathTimer::default());
         }
     }
 }
@@ -67,6 +70,7 @@ pub fn detect_killzone_collision(
 /// Ticks death timer and transitions to Reloading state when it expires.
 pub fn tick_death_timer(
     time: Res<Time>,
+    mut virtual_time: ResMut<Time<Virtual>>,
     mut death_query: Query<&mut DeathTimer>,
     mut next_state: ResMut<NextState<GameState>>,
 ) {
@@ -74,6 +78,7 @@ pub fn tick_death_timer(
         timer.0.tick(time.delta());
 
         if timer.0.just_finished() {
+            virtual_time.set_relative_speed(1.0);
             next_state.set(GameState::Reloading);
         }
     }
