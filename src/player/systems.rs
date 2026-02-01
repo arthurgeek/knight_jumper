@@ -1,5 +1,6 @@
 use super::components::{
-    AnimationConfig, Grounded, JumpVelocity, Player, Speed, WallContactLeft, WallContactRight,
+    AnimationConfig, Grounded, JumpVelocity, PlatformVelocity, Player, Speed, WallContactLeft,
+    WallContactRight,
 };
 use super::messages::PlayerMovement;
 use super::resources::{KnightAtlas, PlayerInput};
@@ -46,6 +47,34 @@ pub fn update_grounded(
             commands.entity(*player).insert(Grounded);
         } else {
             commands.entity(*player).remove::<Grounded>();
+        }
+    }
+}
+
+/// Tracks velocity from moving platforms the player is standing on.
+pub fn update_platform_velocity(
+    mut commands: Commands,
+    query: Query<(Instance<Player>, &ShapeHits, &Rotation)>,
+    sensors: Query<(), With<Sensor>>,
+    velocities: Query<&LinearVelocity>,
+) {
+    for (player, hits, rotation) in &query {
+        // Find ground hit
+        let ground_hit = hits.iter().find(|hit| {
+            if sensors.contains(hit.entity) {
+                return false;
+            }
+            (rotation * -hit.normal2).angle_to(Vec2::Y).abs() <= std::f32::consts::FRAC_PI_4
+        });
+
+        if let Some(hit) = ground_hit {
+            if let Ok(vel) = velocities.get(hit.entity) {
+                commands.entity(*player).insert(PlatformVelocity(vel.0));
+            } else {
+                commands.entity(*player).remove::<PlatformVelocity>();
+            }
+        } else {
+            commands.entity(*player).remove::<PlatformVelocity>();
         }
     }
 }
@@ -140,12 +169,15 @@ pub fn apply_player_movement(
             Has<Grounded>,
             Has<WallContactLeft>,
             Has<WallContactRight>,
+            Option<&PlatformVelocity>,
         ),
         (With<Player>, Without<DeathTimer>),
     >,
     mut movement_events: MessageWriter<PlayerMovement>,
 ) {
-    for (mut velocity, speed, jump_vel, is_grounded, wall_left, wall_right) in &mut player {
+    for (mut velocity, speed, jump_vel, is_grounded, wall_left, wall_right, platform_vel) in
+        &mut player
+    {
         // Handle jumping - only if grounded AND requested
         if input.jump_requested && is_grounded {
             velocity.y = jump_vel.0;
@@ -157,12 +189,15 @@ pub fn apply_player_movement(
         let blocked = (input.movement_direction < 0.0 && wall_left)
             || (input.movement_direction > 0.0 && wall_right);
 
-        if input.movement_direction != 0.0 && !blocked {
-            velocity.x = input.movement_direction * speed.0;
+        // Base velocity from player input
+        let player_vel = if input.movement_direction != 0.0 && !blocked {
+            input.movement_direction * speed.0
         } else {
-            // Player released movement keys or blocked by wall - apply deceleration
-            velocity.x = move_toward(velocity.x, 0.0, speed.0 * 0.5);
-        }
+            move_toward(velocity.x, 0.0, speed.0 * 0.5)
+        };
+
+        // Add platform velocity if standing on a moving platform
+        velocity.x = player_vel + platform_vel.map(|p| p.0.x).unwrap_or(0.0);
 
         // Send movement event for animation system
         movement_events.write(PlayerMovement {

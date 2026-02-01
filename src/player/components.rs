@@ -49,6 +49,10 @@ impl Player {
 #[derive(Component, Default)]
 pub struct Grounded;
 
+/// Velocity inherited from the platform the player is standing on.
+#[derive(Component, Default)]
+pub struct PlatformVelocity(pub Vec2);
+
 #[derive(Component, Default)]
 pub struct WallContactLeft;
 
