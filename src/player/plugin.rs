@@ -1,10 +1,11 @@
-use super::components::{CoyoteTimer, JumpBuffer, JumpVelocity, Player};
+use super::components::{CoyoteTimer, JumpBuffer, JumpVelocity, Player, PlayerAnimation};
 use super::messages::PlayerMovement;
 use super::resources::{KnightAtlas, PlayerInput};
 use super::systems::{
     apply_player_movement, clear_coyote_timer, detect_player_input, flip_player_sprite,
-    load_knight_atlas, start_coyote_timer, tick_coyote_timer, tick_jump_buffer, update_grounded,
-    update_platform_velocity, update_wall_contact,
+    load_knight_atlas, start_coyote_timer, sync_player_animation, tick_coyote_timer,
+    tick_jump_buffer, update_grounded, update_platform_velocity, update_player_animation,
+    update_wall_contact,
 };
 use bevy::prelude::*;
 
@@ -23,6 +24,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<KnightAtlas>()
             .register_type::<Player>()
+            .register_type::<PlayerAnimation>()
             .register_type::<JumpVelocity>()
             .register_type::<CoyoteTimer>()
             .register_type::<JumpBuffer>()
@@ -57,7 +59,13 @@ impl Plugin for PlayerPlugin {
                     )
                         .chain()
                         .in_set(PlayerSystemSet::Movement),
-                    flip_player_sprite.in_set(PlayerSystemSet::Animation),
+                    (
+                        update_player_animation,
+                        sync_player_animation,
+                        flip_player_sprite,
+                    )
+                        .chain()
+                        .in_set(PlayerSystemSet::Animation),
                 ),
             );
     }

@@ -1,10 +1,10 @@
 use super::components::{
-    CoyoteTimer, Grounded, JumpBuffer, JumpVelocity, PlatformVelocity, Player, WallContactLeft,
-    WallContactRight,
+    CoyoteTimer, Grounded, JumpBuffer, JumpVelocity, PlatformVelocity, Player, PlayerAnimation,
+    WallContactLeft, WallContactRight,
 };
 use super::messages::PlayerMovement;
 use super::resources::{KnightAtlas, PlayerInput};
-use crate::core::components::Speed;
+use crate::core::components::{Speed, SpriteAnimation};
 use crate::killzone::components::DeathTimer;
 use avian2d::prelude::*;
 use bevy::prelude::*;
@@ -306,6 +306,43 @@ pub fn flip_player_sprite(
             for mut sprite in &mut player {
                 sprite.flip_x = event.facing_left;
             }
+        }
+    }
+}
+
+/// Updates PlayerAnimation based on grounded state and movement.
+pub fn update_player_animation(
+    mut player: Query<(&mut PlayerAnimation, &LinearVelocity, Has<Grounded>), With<Player>>,
+) {
+    for (mut anim, velocity, is_grounded) in &mut player {
+        let new_anim = if !is_grounded {
+            PlayerAnimation::Jump
+        } else if velocity.x.abs() > 1.0 {
+            PlayerAnimation::Run
+        } else {
+            PlayerAnimation::Idle
+        };
+
+        if *anim != new_anim {
+            *anim = new_anim;
+        }
+    }
+}
+
+/// Syncs SpriteAnimation when PlayerAnimation changes.
+pub fn sync_player_animation(
+    mut commands: Commands,
+    mut player: Query<(Entity, &PlayerAnimation, &mut Sprite), Changed<PlayerAnimation>>,
+) {
+    for (entity, anim, mut sprite) in &mut player {
+        let (first, last) = anim.frames();
+        commands
+            .entity(entity)
+            .insert(SpriteAnimation::new(first, last, 10));
+
+        // Reset sprite to first frame of new animation
+        if let Some(atlas) = &mut sprite.texture_atlas {
+            atlas.index = first;
         }
     }
 }

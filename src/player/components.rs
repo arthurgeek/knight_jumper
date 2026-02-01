@@ -1,5 +1,5 @@
 use super::resources::KnightAtlas;
-use crate::core::components::{Speed, SpriteAnimation};
+use crate::core::components::Speed;
 use avian2d::prelude::*;
 use bevy::{
     ecs::{lifecycle::HookContext, world::DeferredWorld},
@@ -13,7 +13,7 @@ use bevy::{
     Name = "Player",
     Sprite,
     Anchor = Anchor::from(Vec2::new(0.0, -0.175)),
-    SpriteAnimation = SpriteAnimation::new(0, 3, 10),  // Idle animation
+    PlayerAnimation,
     RigidBody::Dynamic,
     Collider = Collider::capsule(3.0, 5.0),
     ShapeCaster = ShapeCaster::new(Collider::capsule(2.97, 4.95), Vec2::ZERO, 0.0, Dir2::NEG_Y).with_max_distance(2.0).with_max_hits(10),
@@ -83,3 +83,22 @@ pub struct WallContactRight;
 #[derive(Component, Reflect, Default)]
 #[reflect(Component)]
 pub struct JumpVelocity(pub f32);
+
+#[derive(Component, Reflect, Default, Clone, Copy, PartialEq, Eq)]
+#[reflect(Component)]
+pub enum PlayerAnimation {
+    #[default]
+    Idle,
+    Run,
+    Jump,
+}
+
+impl PlayerAnimation {
+    pub fn frames(self) -> (usize, usize) {
+        match self {
+            Self::Idle => (0, 3),
+            Self::Run => (16, 31),
+            Self::Jump => (42, 42),
+        }
+    }
+}
