@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="85" height="26" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="21">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="85" height="26" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="24">
  <tileset firstgid="1" name="world_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="../sprites/world_tileset.png" width="256" height="256"/>
   <tile id="0">
@@ -177,6 +177,17 @@
    eJztlstOAzEMRdNCqXhsaCkjHju+gA2sKRTWiNeex4I9P4AEfDeOGksXK2ESJiUzlY90NYknSqwrK44xiqIoiqIoiqL8B59iflIki+VhIGS5LJfOUjAR2iXdF80oL8eFz2dfB3ULHacLzCUXZ6UTcKyZOF+vFp1IA3pOsZ62pYc8lE4ggPVy2+k68L8nYjl7yDnpgjQL/F9x2icdgA7hX9uwXvbdl/3bIG2Zn36zr6+meQ9BH29It6Q7z7opaUxaDewzdmoz7B/ORxCXb56/gj4+kZ5JL551R6bet52GuZQG3zy2j3w12OsjMEasX12oxRzgWzK2buW9/BYY++7vLpAjb/lWr0PeK7Y2pzC29D3r2s6jicv7PWHPFE/xbJSMjxLOLw3XJ+c+BNlev2nm/Z5jjJwjqXX6m5eoriBroSKtuy9SiZicI9yvUs6OUVeQb6PK+P2SsT3PGia2TvFcHIdqV1GUOd+s9hhC
   </data>
  </layer>
+ <objectgroup id="9" name="Tips">
+  <object id="21" x="164" y="337" width="96.2344" height="18.8438">
+   <text fontfamily="Pixel Operator 8" pixelsize="8" wrap="1" color="#032659">Space to jump.</text>
+  </object>
+  <object id="22" x="669" y="307" width="98.2344" height="18.8438">
+   <text fontfamily="Pixel Operator 8" pixelsize="8" wrap="1" color="#032659">Falling hurts...</text>
+  </object>
+  <object id="23" x="988" y="173" width="98" height="18.8438">
+   <text fontfamily="Pixel Operator 8" pixelsize="8" wrap="1" color="#1950c0">Almost there...</text>
+  </object>
+ </objectgroup>
  <objectgroup id="8" name="Enemies">
   <object id="20" name="SlimeSpawn" x="807" y="320">
    <point/>

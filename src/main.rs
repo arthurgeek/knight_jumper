@@ -8,6 +8,7 @@ mod platform;
 mod player;
 pub mod state;
 mod tiled;
+mod tips;
 
 use bevy::{prelude::*, window::WindowResolution};
 use camera::CameraPlugin;
@@ -20,6 +21,7 @@ use platform::PlatformPlugin;
 use player::PlayerPlugin;
 use state::{GameState, restart_game};
 use tiled::TiledPlugin;
+use tips::TipsPlugin;
 
 fn main() -> AppExit {
     let mut app = App::new();
@@ -45,6 +47,7 @@ fn main() -> AppExit {
         PickupsPlugin,
         KillZonePlugin,
         EnemyPlugin,
+        TipsPlugin,
     ))
     .init_state::<GameState>()
     .add_systems(OnEnter(GameState::Reloading), restart_game);
