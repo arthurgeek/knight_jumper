@@ -49,6 +49,28 @@ impl Player {
 #[derive(Component, Default)]
 pub struct Grounded;
 
+/// Allows jumping for a short window after leaving ground.
+#[derive(Component, Reflect)]
+#[reflect(Component)]
+pub struct CoyoteTimer(pub Timer);
+
+impl Default for CoyoteTimer {
+    fn default() -> Self {
+        Self(Timer::from_seconds(0.1, TimerMode::Once))
+    }
+}
+
+/// Buffers jump input so pressing jump slightly before landing still works.
+#[derive(Component, Reflect)]
+#[reflect(Component)]
+pub struct JumpBuffer(pub Timer);
+
+impl Default for JumpBuffer {
+    fn default() -> Self {
+        Self(Timer::from_seconds(0.1, TimerMode::Once))
+    }
+}
+
 /// Velocity inherited from the platform the player is standing on.
 #[derive(Component, Default)]
 pub struct PlatformVelocity(pub Vec2);

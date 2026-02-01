@@ -1,8 +1,11 @@
-use super::components::{AnimationConfig, AnimationState, JumpVelocity, Player, Speed};
+use super::components::{
+    AnimationConfig, AnimationState, CoyoteTimer, JumpBuffer, JumpVelocity, Player, Speed,
+};
 use super::messages::PlayerMovement;
 use super::resources::{KnightAtlas, PlayerInput};
 use super::systems::{
-    apply_player_movement, detect_player_input, load_knight_atlas, update_grounded,
+    apply_player_movement, clear_coyote_timer, detect_player_input, load_knight_atlas,
+    start_coyote_timer, tick_coyote_timer, tick_jump_buffer, update_grounded,
     update_platform_velocity, update_player_animation, update_wall_contact,
 };
 use bevy::prelude::*;
@@ -26,6 +29,8 @@ impl Plugin for PlayerPlugin {
             .register_type::<AnimationState>()
             .register_type::<Speed>()
             .register_type::<JumpVelocity>()
+            .register_type::<CoyoteTimer>()
+            .register_type::<JumpBuffer>()
             .register_type::<PlayerInput>()
             .init_resource::<PlayerInput>()
             .add_message::<PlayerMovement>()
@@ -43,6 +48,12 @@ impl Plugin for PlayerPlugin {
                 (
                     (
                         (update_grounded, update_wall_contact, update_platform_velocity),
+                        (
+                            start_coyote_timer,
+                            clear_coyote_timer,
+                            tick_coyote_timer,
+                            tick_jump_buffer,
+                        ),
                         apply_player_movement,
                     )
                         .chain()

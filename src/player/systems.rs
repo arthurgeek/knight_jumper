@@ -1,6 +1,6 @@
 use super::components::{
-    AnimationConfig, Grounded, JumpVelocity, PlatformVelocity, Player, Speed, WallContactLeft,
-    WallContactRight,
+    AnimationConfig, CoyoteTimer, Grounded, JumpBuffer, JumpVelocity, PlatformVelocity, Player,
+    Speed, WallContactLeft, WallContactRight,
 };
 use super::messages::PlayerMovement;
 use super::resources::{KnightAtlas, PlayerInput};
@@ -30,10 +30,10 @@ pub fn load_knight_atlas(
 /// System that checks if the player is grounded using ShapeCaster hits.
 pub fn update_grounded(
     mut commands: Commands,
-    mut query: Query<(Instance<Player>, &ShapeHits, &Rotation)>,
+    query: Query<(Instance<Player>, &ShapeHits, &Rotation)>,
     sensors: Query<(), With<Sensor>>,
 ) {
-    for (player, hits, rotation) in &mut query {
+    for (player, hits, rotation) in &query {
         // Grounded if shape caster has a hit with a roughly upward normal (ignoring sensors)
         let is_grounded = hits.iter().any(|hit| {
             // Skip sensors (like coins)
@@ -47,6 +47,57 @@ pub fn update_grounded(
             commands.entity(*player).insert(Grounded);
         } else {
             commands.entity(*player).remove::<Grounded>();
+        }
+    }
+}
+
+/// Starts coyote timer when player leaves ground.
+pub fn start_coyote_timer(
+    mut commands: Commands,
+    mut removed: RemovedComponents<Grounded>,
+    players: Query<(), With<Player>>,
+) {
+    for entity in removed.read() {
+        if players.contains(entity) {
+            commands.entity(entity).insert(CoyoteTimer::default());
+        }
+    }
+}
+
+/// Clears coyote timer when player lands.
+pub fn clear_coyote_timer(
+    mut commands: Commands,
+    query: Query<Entity, (With<Player>, Added<Grounded>)>,
+) {
+    for entity in &query {
+        commands.entity(entity).remove::<CoyoteTimer>();
+    }
+}
+
+/// Ticks coyote timer and removes when expired.
+pub fn tick_coyote_timer(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut query: Query<(Entity, &mut CoyoteTimer)>,
+) {
+    for (entity, mut timer) in &mut query {
+        timer.0.tick(time.delta());
+        if timer.0.just_finished() {
+            commands.entity(entity).remove::<CoyoteTimer>();
+        }
+    }
+}
+
+/// Ticks jump buffer timer and removes when expired.
+pub fn tick_jump_buffer(
+    mut commands: Commands,
+    time: Res<Time>,
+    mut query: Query<(Entity, &mut JumpBuffer)>,
+) {
+    for (entity, mut timer) in &mut query {
+        timer.0.tick(time.delta());
+        if timer.0.just_finished() {
+            commands.entity(entity).remove::<JumpBuffer>();
         }
     }
 }
@@ -160,9 +211,11 @@ pub fn detect_player_input(keyboard: Res<ButtonInput<KeyCode>>, mut input: ResMu
 /// Runs in Movement set after grounded check. Handles all physics calculations
 /// and movement execution separately from input detection.
 pub fn apply_player_movement(
+    mut commands: Commands,
     mut input: ResMut<PlayerInput>,
     mut player: Query<
         (
+            Entity,
             &mut LinearVelocity,
             &Speed,
             &JumpVelocity,
@@ -170,19 +223,45 @@ pub fn apply_player_movement(
             Has<WallContactLeft>,
             Has<WallContactRight>,
             Option<&PlatformVelocity>,
+            Option<&CoyoteTimer>,
+            Option<&JumpBuffer>,
         ),
         (With<Player>, Without<DeathTimer>),
     >,
     mut movement_events: MessageWriter<PlayerMovement>,
 ) {
-    for (mut velocity, speed, jump_vel, is_grounded, wall_left, wall_right, platform_vel) in
-        &mut player
+    for (
+        entity,
+        mut velocity,
+        speed,
+        jump_vel,
+        is_grounded,
+        wall_left,
+        wall_right,
+        platform_vel,
+        coyote,
+        jump_buffer,
+    ) in &mut player
     {
-        // Handle jumping - only if grounded AND requested
-        if input.jump_requested && is_grounded {
+        // Can jump if grounded OR within coyote time
+        let can_jump = is_grounded || coyote.is_some();
+
+        // Jump requested now, or buffered from earlier
+        let wants_jump = input.jump_requested || jump_buffer.is_some();
+
+        if wants_jump && can_jump {
             velocity.y = jump_vel.0;
+            // Consume coyote time and jump buffer
+            commands
+                .entity(entity)
+                .remove::<CoyoteTimer>()
+                .remove::<JumpBuffer>();
+        } else if input.jump_requested && !can_jump {
+            // Pressed jump in air without coyote - start buffer
+            commands.entity(entity).insert(JumpBuffer::default());
         }
-        // Always clear jump request after checking (prevents double jump)
+
+        // Clear raw input after processing
         input.jump_requested = false;
 
         // Handle horizontal movement (blocked by walls)
