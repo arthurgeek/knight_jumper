@@ -1,16 +1,20 @@
 mod camera;
+mod killzone;
 mod physics;
 mod pickups;
 mod platform;
 mod player;
+pub mod state;
 mod tiled;
 
 use bevy::{prelude::*, window::WindowResolution};
 use camera::CameraPlugin;
+use killzone::KillZonePlugin;
 use physics::PhysicsPlugin;
 use pickups::PickupsPlugin;
 use platform::PlatformPlugin;
 use player::PlayerPlugin;
+use state::{GameState, restart_game};
 use tiled::TiledPlugin;
 
 fn main() -> AppExit {
@@ -34,7 +38,10 @@ fn main() -> AppExit {
         CameraPlugin,
         PlatformPlugin,
         PickupsPlugin,
-    ));
+        KillZonePlugin,
+    ))
+    .init_state::<GameState>()
+    .add_systems(OnEnter(GameState::Reloading), restart_game);
 
     #[cfg(feature = "debug")]
     {

@@ -208,5 +208,10 @@
    </properties>
    <polyline points="0,0 96,0"/>
   </object>
+  <object id="14" name="KillZone" x="-50" y="340" width="700" height="50">
+   <properties>
+    <property name="KillZone" type="class" propertytype="knight_jumper::killzone::components::KillZone"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

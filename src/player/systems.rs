@@ -3,6 +3,7 @@ use super::components::{
 };
 use super::messages::PlayerMovement;
 use super::resources::{KnightAtlas, PlayerInput};
+use crate::killzone::components::DeathTimer;
 use avian2d::prelude::*;
 use bevy::prelude::*;
 use moonshine_kind::Instance;
@@ -140,7 +141,7 @@ pub fn apply_player_movement(
             Has<WallContactLeft>,
             Has<WallContactRight>,
         ),
-        With<Player>,
+        (With<Player>, Without<DeathTimer>),
     >,
     mut movement_events: MessageWriter<PlayerMovement>,
 ) {

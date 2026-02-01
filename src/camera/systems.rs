@@ -1,38 +1,62 @@
-use super::components::FollowCamera;
+use super::components::{CameraInitialized, FollowCamera};
 use crate::player::Player;
 use bevy::prelude::*;
 
 pub fn spawn_camera(mut commands: Commands) {
-    // Spawn a 2D camera with proper scaling
     commands.spawn((
         Camera2d,
         Transform::from_scale(Vec3::splat(0.5)),
-        FollowCamera {
-            smoothing_speed: 5.0,
-        },
+        FollowCamera::default(),
     ));
+}
+
+/// Resets camera state so it snaps to player on next spawn.
+pub fn reset_camera(mut commands: Commands, camera: Query<Entity, With<CameraInitialized>>) {
+    for entity in &camera {
+        commands.entity(entity).remove::<CameraInitialized>();
+    }
 }
 
 pub fn follow_player(
     time: Res<Time>,
     player: Query<&Transform, (Without<Camera2d>, With<Player>)>,
-    mut camera: Query<(&mut Transform, &FollowCamera), With<Camera2d>>,
-    mut initialized: Local<bool>,
+    mut camera: Query<
+        (
+            Entity,
+            &mut Transform,
+            &FollowCamera,
+            &Projection,
+            Has<CameraInitialized>,
+        ),
+        With<Camera2d>,
+    >,
+    mut commands: Commands,
 ) {
     let Ok(player_transform) = player.single() else {
         return;
     };
-    let Ok((mut cam_transform, follow)) = camera.single_mut() else {
+    let Ok((cam_entity, mut cam_transform, follow, projection, initialized)) = camera.single_mut()
+    else {
         return;
     };
 
-    let target = player_transform.translation.truncate();
+    // Get half viewport height to clamp camera's bottom edge, not center
+    // Must account for camera scale (0.5 = zoomed in, sees less world space)
+    let half_height = match projection {
+        Projection::Orthographic(ortho) => ortho.area.height() / 2.0 * cam_transform.scale.y,
+        _ => 0.0,
+    };
+    let min_camera_y = follow.limit_bottom + half_height;
+
+    // Target player position, clamped so camera bottom never goes below limit
+    let mut target = player_transform.translation.truncate();
+    target.y = target.y.max(min_camera_y);
 
     // Snap to player on first frame, then smooth follow
-    if !*initialized {
+    if !initialized {
         cam_transform.translation.x = target.x;
         cam_transform.translation.y = target.y;
-        *initialized = true;
+        commands.entity(cam_entity).insert(CameraInitialized);
         return;
     }
 
