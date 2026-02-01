@@ -5,6 +5,21 @@ use bevy::{
     prelude::*,
 };
 
+fn setup_platform_sprite(mut world: DeferredWorld, ctx: HookContext) {
+    let entity = ctx.entity;
+
+    let texture = world
+        .get_resource::<PlatformTexture>()
+        .expect("PlatformTexture resource must be present")
+        .texture
+        .clone();
+
+    if let Some(mut sprite) = world.get_mut::<Sprite>(entity) {
+        sprite.image = texture;
+        sprite.rect = Some(Rect::new(16.0, 0.0, 48.0, 9.0));
+    }
+}
+
 #[derive(Component, Default, Reflect)]
 #[reflect(Component)]
 #[require(
@@ -13,25 +28,8 @@ use bevy::{
     Collider::rectangle(32.0, 9.0),
     ActiveCollisionHooks::MODIFY_CONTACTS
 )]
-#[component(on_add = Self::on_add)]
+#[component(on_add = setup_platform_sprite)]
 pub struct OneWayPlatform;
-
-impl OneWayPlatform {
-    fn on_add(mut world: DeferredWorld, ctx: HookContext) {
-        let entity = ctx.entity;
-
-        let atlas = world
-            .get_resource::<PlatformTexture>()
-            .expect("PlatformTexture resource must be present");
-
-        let texture = atlas.texture.clone();
-
-        if let Some(mut sprite) = world.get_mut::<Sprite>(entity) {
-            sprite.image = texture;
-            sprite.rect = Some(Rect::new(16.0, 0.0, 48.0, 9.0));
-        }
-    }
-}
 
 /// Tiled polyline for a moving platform.
 /// First point = left edge at start, last point = right edge at end.
@@ -44,7 +42,7 @@ impl OneWayPlatform {
     LinearVelocity,
     ActiveCollisionHooks::MODIFY_CONTACTS
 )]
-#[component(on_add = Self::on_add)]
+#[component(on_add = setup_platform_sprite)]
 pub struct MovingPlatform {
     /// Speed in pixels per second
     pub speed: f32,
@@ -66,23 +64,6 @@ impl Default for MovingPlatform {
             start: Vec2::ZERO,
             end: Vec2::ZERO,
             direction: 1.0,
-        }
-    }
-}
-
-impl MovingPlatform {
-    fn on_add(mut world: DeferredWorld, ctx: HookContext) {
-        let entity = ctx.entity;
-
-        let atlas = world
-            .get_resource::<PlatformTexture>()
-            .expect("PlatformTexture resource must be present");
-
-        let texture = atlas.texture.clone();
-
-        if let Some(mut sprite) = world.get_mut::<Sprite>(entity) {
-            sprite.image = texture;
-            sprite.rect = Some(Rect::new(16.0, 0.0, 48.0, 9.0));
         }
     }
 }
