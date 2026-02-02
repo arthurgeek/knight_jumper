@@ -74,7 +74,7 @@ pub fn spawn_tip_text(
     }
 }
 
-/// Updates score text to show current score.
+/// Updates score text when score changes.
 pub fn update_score_text(score: Res<Score>, mut query: Query<&mut Text2d, With<ScoreText>>) {
     for mut text in &mut query {
         **text = format!("You collected {} coins.", score.0);

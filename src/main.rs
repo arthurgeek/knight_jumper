@@ -1,3 +1,4 @@
+mod audio;
 mod camera;
 mod core;
 mod enemy;
@@ -10,6 +11,7 @@ pub mod state;
 mod tiled;
 mod tips;
 
+use audio::AudioPlugin;
 use bevy::{prelude::*, window::WindowResolution};
 use camera::CameraPlugin;
 use core::CorePlugin;
@@ -41,6 +43,7 @@ fn main() -> AppExit {
         TiledPlugin,
         PhysicsPlugin,
         CorePlugin,
+        AudioPlugin,
         PlayerPlugin,
         CameraPlugin,
         PlatformPlugin,

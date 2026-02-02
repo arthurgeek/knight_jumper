@@ -1,5 +1,5 @@
 use super::components::{Score, Speed, SpriteAnimation};
-use super::systems::animate_sprites;
+use super::systems::{animate_sprites, increment_score};
 use bevy::prelude::*;
 
 pub struct CorePlugin;
@@ -10,6 +10,6 @@ impl Plugin for CorePlugin {
             .register_type::<Score>()
             .register_type::<Speed>()
             .register_type::<SpriteAnimation>()
-            .add_systems(Update, animate_sprites);
+            .add_systems(Update, (animate_sprites, increment_score));
     }
 }

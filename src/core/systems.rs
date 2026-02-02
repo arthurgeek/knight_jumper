@@ -1,4 +1,5 @@
-use super::components::SpriteAnimation;
+use super::components::{Score, SpriteAnimation};
+use crate::pickups::messages::CoinCollected;
 use bevy::prelude::*;
 
 /// Ticks sprite animations and advances frames.
@@ -15,5 +16,12 @@ pub fn animate_sprites(time: Res<Time>, mut query: Query<(&mut SpriteAnimation, 
                 atlas.index + 1
             };
         }
+    }
+}
+
+/// Increments score when coins are collected.
+pub fn increment_score(mut messages: MessageReader<CoinCollected>, mut score: ResMut<Score>) {
+    for _ in messages.read() {
+        score.0 += 1;
     }
 }
