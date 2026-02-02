@@ -4,3 +4,8 @@ use bevy::prelude::*;
 #[derive(Component, Reflect, Default)]
 #[reflect(Component)]
 pub struct TipText;
+
+/// Marker for score text
+#[derive(Component, Reflect, Default)]
+#[reflect(Component)]
+pub struct ScoreText;

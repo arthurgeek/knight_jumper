@@ -1,4 +1,5 @@
 use super::components::Coin;
+use crate::core::components::Score;
 use crate::player::Player;
 use avian2d::prelude::*;
 use bevy::prelude::*;
@@ -23,6 +24,7 @@ pub fn setup_coin_sensors(
 pub fn collect_coins(
     mut collision_events: MessageReader<CollisionStart>,
     mut commands: Commands,
+    mut score: ResMut<Score>,
     coins: Query<(), With<Coin>>,
     players: Query<(), With<Player>>,
     collider_query: Query<&TiledColliderOf>,
@@ -50,7 +52,7 @@ pub fn collect_coins(
         if let Some(coin) = coin_entity
             && is_player
         {
-            info!("Coin collected!");
+            score.0 += 1;
             commands.entity(coin).despawn();
         }
     }

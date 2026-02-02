@@ -1,4 +1,5 @@
-use super::components::TipText;
+use super::components::{ScoreText, TipText};
+use crate::core::components::Score;
 use bevy::prelude::*;
 use bevy::sprite::Anchor;
 use bevy_ecs_tiled::prelude::*;
@@ -43,7 +44,10 @@ pub fn spawn_tip_text(
                 let x = object.x - map_width / 2.0;
                 let y = map_height / 2.0 - object.y;
 
-                commands.spawn((
+                // Check if this is a ScoreText
+                let is_score_text = object.properties.contains_key("ScoreText");
+
+                let mut entity = commands.spawn((
                     Name::new(format!("Tip: {}", text)),
                     TipText,
                     Text2d::new(text.clone()),
@@ -61,7 +65,18 @@ pub fn spawn_tip_text(
                     Anchor::TOP_LEFT,
                     Transform::from_xyz(x, y, 5.0),
                 ));
+
+                if is_score_text {
+                    entity.insert(ScoreText);
+                }
             }
         }
+    }
+}
+
+/// Updates score text to show current score.
+pub fn update_score_text(score: Res<Score>, mut query: Query<&mut Text2d, With<ScoreText>>) {
+    for mut text in &mut query {
+        **text = format!("You collected {} coins.", score.0);
     }
 }

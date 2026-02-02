@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="85" height="26" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="24">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="85" height="26" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="27">
  <tileset firstgid="1" name="world_tileset" tilewidth="16" tileheight="16" tilecount="256" columns="16">
   <image source="../sprites/world_tileset.png" width="256" height="256"/>
   <tile id="0">
@@ -174,7 +174,7 @@
  </layer>
  <layer id="1" name="Ground" width="85" height="26">
   <data encoding="base64" compression="zlib">
-   eJztlstOAzEMRdNCqXhsaCkjHju+gA2sKRTWiNeex4I9P4AEfDeOGksXK2ESJiUzlY90NYknSqwrK44xiqIoiqIoiqL8B59iflIki+VhIGS5LJfOUjAR2iXdF80oL8eFz2dfB3ULHacLzCUXZ6UTcKyZOF+vFp1IA3pOsZ62pYc8lE4ggPVy2+k68L8nYjl7yDnpgjQL/F9x2icdgA7hX9uwXvbdl/3bIG2Zn36zr6+meQ9BH29It6Q7z7opaUxaDewzdmoz7B/ORxCXb56/gj4+kZ5JL551R6bet52GuZQG3zy2j3w12OsjMEasX12oxRzgWzK2buW9/BYY++7vLpAjb/lWr0PeK7Y2pzC29D3r2s6jicv7PWHPFE/xbJSMjxLOLw3XJ+c+BNlev2nm/Z5jjJwjqXX6m5eoriBroSKtuy9SiZicI9yvUs6OUVeQb6PK+P2SsT3PGia2TvFcHIdqV1GUOd+s9hhC
+   eJztlslOAzEMht1Ci1gutJQRy40n4AJnynZGbHeWA3deAAl4bhw1FsZK2oRJlEnlT/o1iSdKrF9WHABFURRFARiWTmDJmFgp6VBP06OepmcX5nv6JeYnGXNZFqhOBwEyXBXIsTYmDg09cVPTD2XSzMJxxr3JL98dwH0deNZIThPklZuz0gnAbw2H+HqdOZc29KxCPe1KD3ksnYAH4+W21Y3nf0/EUvaQc9QF6tLzf8VqH3XAdMj+dQ3jZd9+yb8N1Bb89Zt8fYP2PYT7eIu6Q9071k1RY9SqZ5+xVZch//h8xOLyzfNfuI/PqBfUq2PdESz2badlLqWRb6HvFnt9esYc41cNtZgC/pYMrVt5L797xq77uwZS5C3f6ouQ94qpzSkbG/qOdV3nCcLy/ojYM8ZTfjaXjI8izi8N1SflvsZkev0mzPo9xQg558TW6TwvuWpB1kKDWrdfTiNics6hfhVzdohqQb6NGnD7JWN7jjVEaJ3yc/nYV7uKosz4AQUQGiI=
   </data>
  </layer>
  <objectgroup id="9" name="Tips">
@@ -184,8 +184,17 @@
   <object id="22" x="669" y="307" width="98.2344" height="18.8438">
    <text fontfamily="Pixel Operator 8" pixelsize="8" wrap="1" color="#032659">Falling hurts...</text>
   </object>
-  <object id="23" x="988" y="173" width="98" height="18.8438">
+  <object id="24" x="992" y="167" width="98" height="18.8438">
    <text fontfamily="Pixel Operator 8" pixelsize="8" wrap="1" color="#1950c0">Almost there...</text>
+  </object>
+  <object id="25" x="778" y="51" width="98" height="18.8438">
+   <text fontfamily="Pixel Operator 8" pixelsize="8" wrap="1" color="#1498dc" halign="center">Great job!</text>
+  </object>
+  <object id="26" x="813" y="67" width="95" height="25">
+   <properties>
+    <property name="ScoreText" type="class" propertytype="knight_jumper::tips::components::ScoreText"/>
+   </properties>
+   <text fontfamily="Pixel Operator 8" pixelsize="8" wrap="1" color="#1498dc" bold="1" halign="center" valign="center">You collected X coins.</text>
   </object>
  </objectgroup>
  <objectgroup id="8" name="Enemies">

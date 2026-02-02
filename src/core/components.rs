@@ -5,6 +5,10 @@ use std::time::Duration;
 #[reflect(Component)]
 pub struct Speed(pub f32);
 
+#[derive(Resource, Reflect, Default)]
+#[reflect(Resource)]
+pub struct Score(pub u32);
+
 /// Simple looping sprite animation.
 #[derive(Component, Reflect)]
 #[reflect(Component)]
